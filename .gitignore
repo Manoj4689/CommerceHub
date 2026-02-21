@@ -1,0 +1,25 @@
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE (project-level; subprojects have their own)
+.idea/
+.vscode/
+*.sublime-*
+
+# Env and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+secrets/
+
+# Logs (root-level)
+*.log
+logs/
+
+# Misc
+*.local
