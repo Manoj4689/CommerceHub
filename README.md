@@ -1,6 +1,6 @@
 # CommerceHub
 
-A modern, full-stack e-commerce platform built with Spring Boot and React. Features include product management, shopping cart functionality, advanced filtering, and a beautiful dark/light theme toggle.
+A modern, full-stack E-Commerce platform built with Spring Boot and React. Features include product management, shopping cart functionality, advanced filtering, and a beautiful dark/light theme toggle.
 
 ## Features
 
