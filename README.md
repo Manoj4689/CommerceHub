@@ -1,11 +1,12 @@
 # CommerceHub
 
-A modern, full-stack E-Commerce platform built with Spring Boot and React. Features include product management, shopping cart functionality, advanced filtering, and a beautiful dark/light theme toggle.
+A modern, full-stack E-Commerce platform built with Spring Boot and React. Features include authentication, product management, shopping cart functionality, advanced filtering, and a beautiful dark/light theme toggle.
 
 ## Features
 
 ### Backend (Spring Boot)
 - RESTful API with Spring Boot 3.3.9
+- JWT based Authentication
 - H2 in-memory database for development
 - JPA/Hibernate for data persistence
 - Product CRUD operations with image upload
@@ -146,7 +147,7 @@ CommerceHub/
 - Toast notifications for user actions
 - Accessible UI with ARIA labels
 
-## Resume-Worthy Features
+## Key Elements
 
 1. **Full-Stack Development**: Complete CRUD application with RESTful API
 2. **Modern Frontend**: React with hooks, context API, and modern patterns
@@ -191,16 +192,6 @@ npm run preview
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
-
-This project is open source and available under the MIT License.
-
 ## Author
 
 Created as a learning project to demonstrate full-stack development skills.
-
-## Acknowledgments
-
-- Spring Boot team for the excellent framework
-- React team for the powerful UI library
-- Bootstrap for the responsive CSS framework
