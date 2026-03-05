@@ -2,13 +2,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useState } from "react";
 import AppContext from "../Context/Context";
+import AuthContext from "../Context/AuthContext";
 import { ToastContext } from "../Context/ToastContext";
 import axios from "../axios";
 
 const Product = () => {
   const { id } = useParams();
   const { addToCart, removeFromCart, refreshData } = useContext(AppContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
   const { addToast } = useContext(ToastContext);
+  const isAdmin = isAuthenticated && user?.role === "ADMIN";
   const [product, setProduct] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(true);
@@ -18,15 +21,12 @@ const Product = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `http://localhost:8080/api/product/${id}`
-        );
+        const response = await axios.get(`/product/${id}`);
         setProduct(response.data);
         if (response.data.imageName) {
-          const imgRes = await axios.get(
-            `http://localhost:8080/api/product/${id}/image`,
-            { responseType: "blob" }
-          );
+          const imgRes = await axios.get(`/product/${id}/image`, {
+            responseType: "blob",
+          });
           setImageUrl(URL.createObjectURL(imgRes.data));
         }
       } catch (error) {
@@ -42,7 +42,7 @@ const Product = () => {
 
   const deleteProduct = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/product/${id}`);
+      await axios.delete(`/product/${id}`);
       removeFromCart(id);
       addToast("Product deleted successfully", "success");
       refreshData();
@@ -151,41 +151,42 @@ const Product = () => {
             </h6>
           
           </div>
-          <div className="update-button" style={{ display: "flex", gap: "1rem" }}>
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={handleEditClick}
-              style={{
-                padding: "1rem 2rem",
-                fontSize: "1rem",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Update
-            </button>
-            {/* <UpdateProduct product={product} onUpdate={handleUpdate} /> */}
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={deleteProduct}
-              style={{
-                padding: "1rem 2rem",
-                fontSize: "1rem",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Delete
-            </button>
-          </div>
+          {isAdmin && (
+            <div className="update-button" style={{ display: "flex", gap: "1rem" }}>
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={handleEditClick}
+                style={{
+                  padding: "1rem 2rem",
+                  fontSize: "1rem",
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={deleteProduct}
+                style={{
+                  padding: "1rem 2rem",
+                  fontSize: "1rem",
+                  backgroundColor: "#dc3545",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

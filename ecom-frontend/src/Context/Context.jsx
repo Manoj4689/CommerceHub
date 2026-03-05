@@ -1,5 +1,6 @@
 import axios from "../axios";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
+import AuthContext from "./AuthContext";
 
 const AppContext = createContext({
   data: [],
@@ -13,6 +14,7 @@ const AppContext = createContext({
 });
 
 export const AppProvider = ({ children }) => {
+  const { isAuthenticated, isLoading: authLoading } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState("");
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
@@ -67,8 +69,10 @@ export const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    refreshData();
-  }, []);
+    if (isAuthenticated && !authLoading) {
+      refreshData();
+    }
+  }, [isAuthenticated, authLoading]);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));

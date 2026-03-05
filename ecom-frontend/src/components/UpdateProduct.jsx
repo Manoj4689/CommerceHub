@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../axios";
 import { ToastContext } from "../Context/ToastContext";
 
 const UpdateProduct = () => {
@@ -24,16 +24,13 @@ const UpdateProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/product/${id}`
-        );
+        const response = await axios.get(`/product/${id}`);
 
         setProduct(response.data);
-      
-        const responseImage = await axios.get(
-          `http://localhost:8080/api/product/${id}/image`,
-          { responseType: "blob" }
-        );
+
+        const responseImage = await axios.get(`/product/${id}/image`, {
+          responseType: "blob",
+        });
        const imageFile = await converUrlToFile(responseImage.data,response.data.imageName)
         setImage(imageFile);     
         setUpdateProduct(response.data);
@@ -70,7 +67,7 @@ const UpdateProduct = () => {
 
   console.log("formData : ", updatedProduct)
     axios
-      .put(`http://localhost:8080/api/product/${id}`, updatedProduct, {
+      .put(`/product/${id}`, updatedProduct, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

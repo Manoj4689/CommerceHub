@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../axios";
 import { ToastContext } from "../Context/ToastContext";
 import AppContext from "../Context/Context";
 
@@ -40,7 +40,7 @@ const AddProduct = () => {
     );
 
     axios
-      .post("http://localhost:8080/api/product", formData, {
+      .post("/product", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

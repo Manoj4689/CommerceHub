@@ -260,7 +260,7 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import AppContext from "../Context/Context";
-import axios from "axios";
+import axios from "../axios";
 import CheckoutPopup from "./CheckoutPopup";
 import { Button } from "react-bootstrap";
 
@@ -275,7 +275,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchImagesAndUpdateCart = async () => {
       try {
-        const productsResponse = await axios.get("http://localhost:8080/api/products");
+        const productsResponse = await axios.get("/products");
         const backendProductIds = productsResponse.data.map((product) => product.id);
 
         const updatedCartItems = cart.filter((item) => backendProductIds.includes(item.id));
@@ -283,7 +283,7 @@ const Cart = () => {
           updatedCartItems.map(async (item) => {
             try {
               const imgResponse = await axios.get(
-                `http://localhost:8080/api/product/${item.id}/image`,
+                `/product/${item.id}/image`,
                 { responseType: "blob" }
               );
               const productMeta = productsResponse.data.find((p) => p.id === item.id);
@@ -369,7 +369,7 @@ const Cart = () => {
         );
   
         await axios
-          .put(`http://localhost:8080/api/product/${item.id}`, cartProduct, {
+          .put(`/product/${item.id}`, cartProduct, {
             headers: {
               "Content-Type": "multipart/form-data",
             },

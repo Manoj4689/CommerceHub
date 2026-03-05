@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../axios";
 import AppContext from "../Context/Context";
+import AuthContext from "../Context/AuthContext";
 
 const Navbar = ({ onSelectCategory }) => {
   const { cart } = useContext(AppContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const getInitialTheme = () => {
     const storedTheme = localStorage.getItem("theme");
     return storedTheme ? storedTheme : "light-theme";
@@ -16,13 +19,16 @@ const Navbar = ({ onSelectCategory }) => {
   const [noResults, setNoResults] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [showSearchResults,setShowSearchResults] = useState(false)
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
 
   const fetchData = async (value) => {
     try {
-      const response = await axios.get("http://localhost:8080/api/products");
+      const response = await axios.get("/products");
       setSearchResults(response.data);
       console.log(response.data);
     } catch (error) {
@@ -36,7 +42,7 @@ const Navbar = ({ onSelectCategory }) => {
       setShowSearchResults(true)
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/products/search?keyword=${value}`
+        `/products/search?keyword=${value}`
       );
       setSearchResults(response.data);
       setNoResults(response.data.length === 0);
@@ -133,11 +139,13 @@ const Navbar = ({ onSelectCategory }) => {
                     Home
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/add_product">
-                    Add Product
-                  </Link>
-                </li>
+                {isAuthenticated && user?.role === "ADMIN" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/add_product">
+                      Add Product
+                    </Link>
+                  </li>
+                )}
 
                 <li className="nav-item dropdown">
                   <button
@@ -177,6 +185,32 @@ const Navbar = ({ onSelectCategory }) => {
                   <i className="bi bi-sun-fill" aria-hidden />
                 )}
               </button>
+
+              {isAuthenticated ? (
+                <div className="d-flex align-items-center ms-2">
+                  <span className="navbar-text me-2">
+                    <i className="bi bi-person-check me-1"></i>
+                    {user?.username}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={() => {
+                      logout();
+                      navigate("/");
+                    }}
+                  >
+                    <i className="bi bi-box-arrow-right me-1"></i>
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link to="/login" className="btn btn-outline-primary btn-sm ms-2">
+                  <i className="bi bi-box-arrow-in-right me-1"></i>
+                  Login
+                </Link>
+              )}
+
               <div className="d-flex align-items-center cart nav-cart-wrap">
                 <Link to="/cart" className="nav-link cart-link" aria-label={`Cart, ${cartCount} items`}>
                   <i className="bi bi-cart3 me-1" aria-hidden />
